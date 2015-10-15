@@ -213,91 +213,98 @@ public class TripIndicatorFragmentActivity extends FragmentActivity {
                 /*Bundle b = getIntent().getExtras();
                 String[] resultArr = b.getStringArray("selectedItems");*/
 
-                String chklist="",item="";
-                int q=0;
+               if(locationSpinner.getText().toString().equals(""))
+               {
+                   Toast.makeText(getApplicationContext(),"Enter Location",Toast.LENGTH_SHORT).show();
+               }
+                else
+               {
+                   String chklist="",item="";
+                   int q=0;
 
                /* for(int i=0;i<resultArr.length;i++)
                     chklist=resultArr[i]+", ";*/
 
-                Cursor cursor = sqLite.getPackingItemChecked();
+                   Cursor cursor = sqLite.getPackingItemChecked();
 
-                while (cursor.moveToNext())
-                {
-                    q=cursor.getInt(cursor.getColumnIndex("Quantity"));
-                    item=cursor.getString(cursor.getColumnIndex("PackingItem"));
+                   while (cursor.moveToNext())
+                   {
+                       q=cursor.getInt(cursor.getColumnIndex("Quantity"));
+                       item=cursor.getString(cursor.getColumnIndex("PackingItem"));
 
-                    chklist+=q+" "+item+" ";
+                       chklist+=q+" "+item+" ";
 
-                }
-                mLocationPicked=locationSpinner.getText().toString();
-                mItemPicked = "Trip to " + mLocationPicked + " is scheduled on " + departure_formattedate + " till " + arrival_formattedate + ". Please bring following items:- " + chklist  +"\n";
+                   }
+                   mLocationPicked=locationSpinner.getText().toString();
+                   mItemPicked = "Trip to " + mLocationPicked + " is scheduled on " + departure_formattedate + " till " + arrival_formattedate + ". Please bring following items:- " + chklist  +"\n";
 
-                Calendar calendar = Calendar.getInstance();
-                Log.d(TAGTIFA, "Date:" + dep_year + " " + dep_month + " " + dep_day);
-                calendar.set(dep_year,dep_month,dep_day,ALARM_HOUR,ALARM_MINUTE,ALARM_SECONDS);
-                long deptime= calendar.getTimeInMillis();
-                long today= Calendar.getInstance().getTimeInMillis();
-                long interval=0;
-                Log.d(TAGTIFA,"Dep Time:"+deptime);
-                Log.d(TAGTIFA, "Today: " + today);
-                if(deptime>today) {
-                    interval = getTimeInterval(deptime, today);
-                    /**
-                     * Setting Up Alarm for a Week Before
-                     * A day Before
-                     * On day of Trip
-                     */
-                    long sevenDays = 6 * 24 * 60 * 60 * 1000;
-                    long oneDay = 24 * 60 * 60 * 1000;
-                    Log.d(TAGTIFA,"Alarm Interval: "+interval);
-                    if (interval >= 7) {
-                        Log.d(TAGTIFA,"Category 1 Alarm Set");
-                        Intent myIntent1 = new Intent(TripIndicatorFragmentActivity.this, TripAlarmReceiver.class);
-                        myIntent1.putExtra("AlarmID",101);
-                        pendingIntent = PendingIntent.getBroadcast(TripIndicatorFragmentActivity.this, 101, myIntent1, PendingIntent.FLAG_UPDATE_CURRENT);
-                        alarmManager.set(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis() - sevenDays, pendingIntent);
+                   Calendar calendar = Calendar.getInstance();
+                   Log.d(TAGTIFA, "Date:" + dep_year + " " + dep_month + " " + dep_day);
+                   calendar.set(dep_year,dep_month,dep_day,ALARM_HOUR,ALARM_MINUTE,ALARM_SECONDS);
+                   long deptime= calendar.getTimeInMillis();
+                   long today= Calendar.getInstance().getTimeInMillis();
+                   long interval=0;
+                   Log.d(TAGTIFA,"Dep Time:"+deptime);
+                   Log.d(TAGTIFA, "Today: " + today);
+                   if(deptime>today) {
+                       interval = getTimeInterval(deptime, today);
+                       /**
+                        * Setting Up Alarm for a Week Before
+                        * A day Before
+                        * On day of Trip
+                        */
+                       long sevenDays = 6 * 24 * 60 * 60 * 1000;
+                       long oneDay = 24 * 60 * 60 * 1000;
+                       Log.d(TAGTIFA,"Alarm Interval: "+interval);
+                       if (interval >= 7) {
+                           Log.d(TAGTIFA,"Category 1 Alarm Set");
+                           Intent myIntent1 = new Intent(TripIndicatorFragmentActivity.this, TripAlarmReceiver.class);
+                           myIntent1.putExtra("AlarmID",101);
+                           pendingIntent = PendingIntent.getBroadcast(TripIndicatorFragmentActivity.this, 101, myIntent1, PendingIntent.FLAG_UPDATE_CURRENT);
+                           alarmManager.set(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis() - sevenDays, pendingIntent);
 
-                        Intent myIntent2 = new Intent(TripIndicatorFragmentActivity.this, TripAlarmReceiver.class);
-                        myIntent2.putExtra("AlarmID",102);
-                        pendingIntent = PendingIntent.getBroadcast(TripIndicatorFragmentActivity.this, 102, myIntent2, PendingIntent.FLAG_UPDATE_CURRENT);
-                        alarmManager.set(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis() - oneDay, pendingIntent);
+                           Intent myIntent2 = new Intent(TripIndicatorFragmentActivity.this, TripAlarmReceiver.class);
+                           myIntent2.putExtra("AlarmID",102);
+                           pendingIntent = PendingIntent.getBroadcast(TripIndicatorFragmentActivity.this, 102, myIntent2, PendingIntent.FLAG_UPDATE_CURRENT);
+                           alarmManager.set(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis() - oneDay, pendingIntent);
 
-                        Intent myIntent3 = new Intent(TripIndicatorFragmentActivity.this, TripAlarmReceiver.class);
-                        myIntent3.putExtra("AlarmID",103);
-                        pendingIntent = PendingIntent.getBroadcast(TripIndicatorFragmentActivity.this, 103, myIntent3, PendingIntent.FLAG_UPDATE_CURRENT );
-                        alarmManager.set(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), pendingIntent);
-                        Toast.makeText(getApplicationContext(), "Reminders are Set!", Toast.LENGTH_LONG).show();
-                    } else if (interval < 7 && interval > 1) {
+                           Intent myIntent3 = new Intent(TripIndicatorFragmentActivity.this, TripAlarmReceiver.class);
+                           myIntent3.putExtra("AlarmID",103);
+                           pendingIntent = PendingIntent.getBroadcast(TripIndicatorFragmentActivity.this, 103, myIntent3, PendingIntent.FLAG_UPDATE_CURRENT );
+                           alarmManager.set(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), pendingIntent);
+                           Toast.makeText(getApplicationContext(), "Reminders are Set!", Toast.LENGTH_LONG).show();
+                       } else if (interval < 7 && interval > 1) {
 
-                        Log.d(TAGTIFA,"Category 2 Alarm Set");
-                        Intent myIntent1 = new Intent(TripIndicatorFragmentActivity.this, TripAlarmReceiver.class);
-                        myIntent1.putExtra("AlarmID",102);
-                        pendingIntent = PendingIntent.getBroadcast(TripIndicatorFragmentActivity.this, 102, myIntent1, PendingIntent.FLAG_UPDATE_CURRENT);
-                        alarmManager.set(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis() - oneDay, pendingIntent);
-                        Intent myIntent2 = new Intent(TripIndicatorFragmentActivity.this, TripAlarmReceiver.class);
-                        myIntent2.putExtra("AlarmID",103);
-                        pendingIntent = PendingIntent.getBroadcast(TripIndicatorFragmentActivity.this, 103, myIntent2, PendingIntent.FLAG_UPDATE_CURRENT);
-                        alarmManager.set(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), pendingIntent);
-                        Toast.makeText(getApplicationContext(), "Reminders are Set!", Toast.LENGTH_LONG).show();
+                           Log.d(TAGTIFA,"Category 2 Alarm Set");
+                           Intent myIntent1 = new Intent(TripIndicatorFragmentActivity.this, TripAlarmReceiver.class);
+                           myIntent1.putExtra("AlarmID",102);
+                           pendingIntent = PendingIntent.getBroadcast(TripIndicatorFragmentActivity.this, 102, myIntent1, PendingIntent.FLAG_UPDATE_CURRENT);
+                           alarmManager.set(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis() - oneDay, pendingIntent);
+                           Intent myIntent2 = new Intent(TripIndicatorFragmentActivity.this, TripAlarmReceiver.class);
+                           myIntent2.putExtra("AlarmID",103);
+                           pendingIntent = PendingIntent.getBroadcast(TripIndicatorFragmentActivity.this, 103, myIntent2, PendingIntent.FLAG_UPDATE_CURRENT);
+                           alarmManager.set(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), pendingIntent);
+                           Toast.makeText(getApplicationContext(), "Reminders are Set!", Toast.LENGTH_LONG).show();
 
-                    } else {
-                        Log.d(TAGTIFA,"Category 3 Alarm Set");
-                        Intent myIntent = new Intent(TripIndicatorFragmentActivity.this, TripAlarmReceiver.class);
-                        myIntent.putExtra("AlarmID",103);
-                        pendingIntent = PendingIntent.getBroadcast(TripIndicatorFragmentActivity.this, 103, myIntent, PendingIntent.FLAG_UPDATE_CURRENT);
-                        alarmManager.set(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), pendingIntent);
-                        Toast.makeText(getApplicationContext(), "Reminders are Set!", Toast.LENGTH_LONG).show();
-                    }
-                }
-                else
-                {
-                    Toast.makeText(getApplicationContext(),"Enter future departure time.", Toast.LENGTH_LONG).show();
-                }
+                       } else {
+                           Log.d(TAGTIFA,"Category 3 Alarm Set");
+                           Intent myIntent = new Intent(TripIndicatorFragmentActivity.this, TripAlarmReceiver.class);
+                           myIntent.putExtra("AlarmID",103);
+                           pendingIntent = PendingIntent.getBroadcast(TripIndicatorFragmentActivity.this, 103, myIntent, PendingIntent.FLAG_UPDATE_CURRENT);
+                           alarmManager.set(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), pendingIntent);
+                           Toast.makeText(getApplicationContext(), "Reminders are Set!", Toast.LENGTH_LONG).show();
+                       }
+                   }
+                   else
+                   {
+                       Toast.makeText(getApplicationContext(),"Enter future departure time.", Toast.LENGTH_LONG).show();
+                   }
 
 
 
-                loc = locationSpinner.getText().toString();
-                sqLite.insertLocation(loc);
+                   loc = locationSpinner.getText().toString();
+                   sqLite.insertLocation(loc);
+               }
 
 
             }
