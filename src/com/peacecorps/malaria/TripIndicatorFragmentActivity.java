@@ -62,7 +62,7 @@ public class TripIndicatorFragmentActivity extends FragmentActivity {
     static SharedPreferenceStore mSharedPreferenceStore;
     private Dialog dialog = null;
     private ImageView loc_history;
-    public static TextView packingSelect;
+    public static TextView packingSelect,departureMonth,arrivalMonth;
     public static final String DRUG_TAG="com.peacecorps.malaria.TripIndicatorFragmentActivity.DRUG_TAG";
     long num_drugs=0;
     private String arrival_formattedate, departure_formattedate;
@@ -104,6 +104,8 @@ public class TripIndicatorFragmentActivity extends FragmentActivity {
         alarmManager = (AlarmManager)getSystemService(ALARM_SERVICE);
         tripTime = (TextView)findViewById(R.id.trip_time);
         pmtLabel = (TextView)findViewById(R.id.pmt);
+        departureMonth=(TextView)findViewById(R.id.trip_month_departure);
+        arrivalMonth=(TextView)findViewById(R.id.trip_month);
 
         //setting fonts
         Typeface cf = Typeface.createFromAsset(getAssets(),"fonts/garreg.ttf");
@@ -215,7 +217,23 @@ public class TripIndicatorFragmentActivity extends FragmentActivity {
 
                if(locationSpinner.getText().toString().equals(""))
                {
-                   Toast.makeText(getApplicationContext(),"Enter Location",Toast.LENGTH_SHORT).show();
+                   Toast.makeText(getApplicationContext()," Location Missing ",Toast.LENGTH_SHORT).show();
+               }
+               else if(tripTime.getText().toString().equals(""))
+               {
+                   Toast.makeText(getApplicationContext()," Remainder Time Missing ",Toast.LENGTH_SHORT).show();
+               }
+               else if(packingSelect.getText().toString().equals(""))
+               {
+                   Toast.makeText(getApplicationContext()," Packing List Missing ",Toast.LENGTH_SHORT).show();
+               }
+               else if(departureMonth.getText().toString().equals(""))
+               {
+                   Toast.makeText(getApplicationContext()," Departure Date Missing ",Toast.LENGTH_SHORT).show();
+               }
+               else if(arrivalMonth.getText().toString().equals(""))
+               {
+                   Toast.makeText(getApplicationContext()," Arrival Date Missing ",Toast.LENGTH_SHORT).show();
                }
                 else
                {
