@@ -219,14 +219,6 @@ public class TripIndicatorFragmentActivity extends FragmentActivity {
                {
                    Toast.makeText(getApplicationContext()," Location Missing ",Toast.LENGTH_SHORT).show();
                }
-               else if(tripTime.getText().toString().equals(""))
-               {
-                   Toast.makeText(getApplicationContext()," Remainder Time Missing ",Toast.LENGTH_SHORT).show();
-               }
-               else if(packingSelect.getText().toString().equals(""))
-               {
-                   Toast.makeText(getApplicationContext()," Packing List Missing ",Toast.LENGTH_SHORT).show();
-               }
                else if(departureMonth.getText().toString().equals(""))
                {
                    Toast.makeText(getApplicationContext()," Departure Date Missing ",Toast.LENGTH_SHORT).show();
@@ -235,6 +227,15 @@ public class TripIndicatorFragmentActivity extends FragmentActivity {
                {
                    Toast.makeText(getApplicationContext()," Arrival Date Missing ",Toast.LENGTH_SHORT).show();
                }
+                else if(packingSelect.getText().toString().equals(""))
+               {
+                   Toast.makeText(getApplicationContext()," Packing List Missing ",Toast.LENGTH_SHORT).show();
+               }
+               else if(tripTime.getText().toString().equals(""))
+               {
+                   Toast.makeText(getApplicationContext()," Remainder Time Missing ",Toast.LENGTH_SHORT).show();
+               }
+
                 else
                {
                    String chklist="",item="";
