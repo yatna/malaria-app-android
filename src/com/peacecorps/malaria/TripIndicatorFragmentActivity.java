@@ -100,16 +100,25 @@ public class TripIndicatorFragmentActivity extends FragmentActivity {
         btnGenerate=(Button)findViewById(R.id.generateButton);
         btnGear=(Button)findViewById(R.id.trip_settings_button);
         packingSelect=(TextView)findViewById(R.id.tripSelectBox);
+        ((TextView)findViewById(R.id.tripSelectBox)).requestFocus();
         loc_history=(ImageView)findViewById(R.id.locationHistory);
         alarmManager = (AlarmManager)getSystemService(ALARM_SERVICE);
         tripTime = (TextView)findViewById(R.id.trip_time);
+        ((TextView)findViewById(R.id.trip_time)).requestFocus();
+
+
         pmtLabel = (TextView)findViewById(R.id.pmt);
         departureMonth=(TextView)findViewById(R.id.trip_month_departure);
+        ((TextView)findViewById(R.id.trip_month_departure)).requestFocus();
         arrivalMonth=(TextView)findViewById(R.id.trip_month);
+        ((TextView)findViewById(R.id.trip_month)).requestFocus();
 
         //setting fonts
         Typeface cf = Typeface.createFromAsset(getAssets(),"fonts/garreg.ttf");
         pmtLabel.setTypeface(cf);
+
+        //disable generate button
+       // btnGenerate.setClickable(false);
 
          sqLite = new DatabaseSQLiteHelper(this);
 
@@ -214,26 +223,30 @@ public class TripIndicatorFragmentActivity extends FragmentActivity {
 
                 /*Bundle b = getIntent().getExtras();
                 String[] resultArr = b.getStringArray("selectedItems");*/
+                departureMonth.setError(null);
+                arrivalMonth.setError(null);
+                packingSelect.setError(null);
+                tripTime.setError(null);
 
                if(locationSpinner.getText().toString().equals(""))
                {
-                   Toast.makeText(getApplicationContext()," Location Missing ",Toast.LENGTH_SHORT).show();
+                   locationSpinner.setError("Field cannot be left blank.");
                }
                else if(departureMonth.getText().toString().equals(""))
                {
-                   Toast.makeText(getApplicationContext()," Departure Date Missing ",Toast.LENGTH_SHORT).show();
+                   departureMonth.setError("Field cannot be left blank.");
                }
                else if(arrivalMonth.getText().toString().equals(""))
                {
-                   Toast.makeText(getApplicationContext()," Arrival Date Missing ",Toast.LENGTH_SHORT).show();
+                   arrivalMonth.setError("Field cannot be left blank.");
                }
                 else if(packingSelect.getText().toString().equals(""))
                {
-                   Toast.makeText(getApplicationContext()," Packing List Missing ",Toast.LENGTH_SHORT).show();
+                   packingSelect.setError("Field cannot be left blank.");
                }
                else if(tripTime.getText().toString().equals(""))
                {
-                   Toast.makeText(getApplicationContext()," Remainder Time Missing ",Toast.LENGTH_SHORT).show();
+                   tripTime.setError("Field cannot be left blank.");
                }
 
                 else
@@ -355,17 +368,24 @@ public class TripIndicatorFragmentActivity extends FragmentActivity {
             @Override
             public void onClick(View v) {
 
-                Intent intent = new Intent(getApplication(), TripIndicatorPackingActivity.class);
+                if(departureMonth.getText().toString().equals("") || arrivalMonth.getText().toString().equals("") )
+                {
+                    Toast.makeText(getApplicationContext(),"Enter Departure Date and Arrival Date First ",Toast.LENGTH_SHORT).show();
+                }
+               else
+                {
+                    Intent intent = new Intent(getApplication(), TripIndicatorPackingActivity.class);
 
-                Log.d(TAGTIFA,departure_formattedate+"  "+arrival_formattedate);
+                    Log.d(TAGTIFA,departure_formattedate+"  "+arrival_formattedate);
 
-                setNumDrugs(departure_formattedate, arrival_formattedate);
+                    setNumDrugs(departure_formattedate, arrival_formattedate);
 
-                intent.putExtra(DRUG_TAG, num_drugs);
+                    intent.putExtra(DRUG_TAG, num_drugs);
 
-                startActivity(intent);
+                    startActivity(intent);
 
-                packingSelect.setText(TripIndicatorPackingActivity.tripDrugName);
+                    packingSelect.setText(TripIndicatorPackingActivity.tripDrugName);
+                }
             }
         });
 
@@ -388,14 +408,14 @@ public class TripIndicatorFragmentActivity extends FragmentActivity {
         dialog.setContentView(R.layout.resetdata_dialog);
         //dialog.setTitle("Reset Data");
 
-        final RadioGroup btnRadGroup = (RadioGroup) dialog.findViewById(R.id.radioGroupReset);
+        //final RadioGroup btnRadGroup = (RadioGroup) dialog.findViewById(R.id.radioGroupReset);
         Button btnOK = (Button) dialog.findViewById(R.id.dialogButtonOKReset);
 
         btnOK.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
 
-                // get selected radio button from radioGroup
+             /*   // get selected radio button from radioGroup
                 int selectedId = btnRadGroup.getCheckedRadioButtonId();
 
                 // find the radiobutton by returned id
@@ -413,7 +433,13 @@ public class TripIndicatorFragmentActivity extends FragmentActivity {
 
                 } else {
                     dialog.dismiss();
-                }
+                }*/
+                DatabaseSQLiteHelper sqLite = new DatabaseSQLiteHelper(getApplicationContext());
+                sqLite.resetDatabase();
+                mSharedPreferenceStore.mEditor.clear().commit();
+                SharedPreferenceStore.mEditor.clear().commit();
+                startActivity(new Intent(getApplication().getApplicationContext(),
+                        UserMedicineSettingsFragmentActivity.class));
 
             }
         });
@@ -448,7 +474,10 @@ public class TripIndicatorFragmentActivity extends FragmentActivity {
         else
         {
             Log.d("TripIndicatorPacking","Date was not parsed properly!");
+
         }
+
+
 
 }
 
@@ -477,13 +506,13 @@ public class TripIndicatorFragmentActivity extends FragmentActivity {
         String date_data=dateData.getText().toString();
         String month_data=monthData.getText().toString();
         String year_data=yearData.getText().toString();
-        arrival_formattedate=month_data+"/"+date_data+"/"+year_data;
+        arrival_formattedate=date_data+"/"+month_data+"/"+year_data;
         SharedPreferenceStore.mEditor.putString("com.peacecorps.malaria.trip_date", arrival_formattedate).commit();
 
         String departure_date_data=DepartureDateData.getText().toString();
         String departure_month_data=DepartureMonthData.getText().toString();
         String departure_year_data=DepartureYearData.getText().toString();
-        departure_formattedate=departure_month_data+"/"+departure_date_data+"/"+departure_year_data;
+        departure_formattedate=departure_date_data+"/"+departure_month_data+"/"+departure_year_data;
 
         SharedPreferenceStore.mEditor.putString("com.peacecorps.malaria.departure_trip_date", departure_formattedate).commit();
         SharedPreferenceStore.mEditor.putString("com.peacecorps.malaria.trip_drug",mDrugPicked).commit();
