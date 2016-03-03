@@ -230,15 +230,23 @@ public class TripIndicatorFragmentActivity extends FragmentActivity {
 
                if(locationSpinner.getText().toString().equals(""))
                {
-                   locationSpinner.setError("Field cannot be left blank.");
+                   Toast.makeText(getApplicationContext()," Location Missing ",Toast.LENGTH_SHORT).show();
+               }
+               else if(tripTime.getText().toString().equals(""))
+               {
+                   Toast.makeText(getApplicationContext()," Remainder Time Missing ",Toast.LENGTH_SHORT).show();
+               }
+               else if(packingSelect.getText().toString().equals(""))
+               {
+                   Toast.makeText(getApplicationContext()," Packing List Missing ",Toast.LENGTH_SHORT).show();
                }
                else if(departureMonth.getText().toString().equals(""))
                {
-                   departureMonth.setError("Field cannot be left blank.");
+                   Toast.makeText(getApplicationContext()," Departure Date Missing ",Toast.LENGTH_SHORT).show();
                }
                else if(arrivalMonth.getText().toString().equals(""))
                {
-                   arrivalMonth.setError("Field cannot be left blank.");
+                   Toast.makeText(getApplicationContext()," Arrival Date Missing ",Toast.LENGTH_SHORT).show();
                }
                 else if(packingSelect.getText().toString().equals(""))
                {
@@ -368,7 +376,7 @@ public class TripIndicatorFragmentActivity extends FragmentActivity {
             @Override
             public void onClick(View v) {
 
-                if(departureMonth.getText().toString().equals("") || arrivalMonth.getText().toString().equals("") )
+                  if(departureMonth.getText().toString().equals("") || arrivalMonth.getText().toString().equals("") )
                 {
                     Toast.makeText(getApplicationContext(),"Enter Departure Date and Arrival Date First ",Toast.LENGTH_SHORT).show();
                 }
@@ -474,10 +482,7 @@ public class TripIndicatorFragmentActivity extends FragmentActivity {
         else
         {
             Log.d("TripIndicatorPacking","Date was not parsed properly!");
-
         }
-
-
 
 }
 
