@@ -6,6 +6,8 @@ import android.os.IBinder;
 
 public class AlarmService extends Service {
 
+    /**Setting up Alarm Calls his Alarm Service**/
+
     AlarmHandlerClass alarmHandlerClass = new AlarmHandlerClass();
 
     @Override
@@ -23,11 +25,12 @@ public class AlarmService extends Service {
     public void onCreate() {
 
         super.onCreate();
+
     }
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
-
+        /**Alarm Service Request Made and Alarm Handler will Handle It. **/
         alarmHandlerClass.setAlarm(AlarmService.this);
         return START_STICKY;
     }
